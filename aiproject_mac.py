@@ -1,17 +1,28 @@
 from openai import OpenAI
 import telegram
 from telegram.ext import Application
-from telegram.ext import CommandHandler, filters, MessageHandler, CallbackContext
+from telegram.ext import filters, MessageHandler, CallbackContext
 import asyncio
 import os
 import requests
 
 
 
-TELEGRAM_API_KEY="6466827111:AAEZWZQQLedWR-tDxAOqJXPbvXGcenph0Y8"
-OEPNAI_API_KEY = "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"
-CHAT_ID="6549772508"
+with open('key.txt', 'r') as file:
+    # 파일의 각 줄을 순회
+    for line in file:
+        # 줄바꿈 문자 제거 및 공백 제거
+        line = line.strip()
+        # '=' 기호를 기준으로 키와 값을 분리
+        if "=" in line:
+            key, value = line.split('=', 1)
+            # 환경 변수 설정
+            os.environ[key] = value.strip('"')
 
+
+TELEGRAM_API_KEY=os.environ.get('TELEGRAM_API_KEY')
+OEPNAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+CHAT_ID=os.environ.get('CHAT_ID')
 
 
 def get_completion(client, query, prompt="You are a helpful assistant.", model="gpt-3.5-turbo"):
@@ -34,6 +45,7 @@ async def echo(update, context):
         query = user_text
         answer = get_completion(client, query)
         await context.bot.send_message(chat_id=update.effective_chat.id, text=answer)
+
 
 async def receive_file(update, context: CallbackContext):
     print('pass here for checking to receive files')
