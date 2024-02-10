@@ -85,10 +85,10 @@ def analyze_read():
     print('='*60)
     poller = document_analysis_client.begin_analyze_document_from_url("prebuilt-read", formUrl)
     result = poller.result()
-
+    return result.content[:200]
     # print("Document contains contestn:" , result.content)
-    with open("/mnt/c/Users/김석원/Desktop/python_script/pdf_file_test.txt", "w") as text_file:
-         text_file.write(result.content+'\n\n\n\n\n')
+    # with open("/mnt/c/Users/김석원/Desktop/python_script/pdf_file_test.txt", "w") as text_file:
+    #      text_file.write(result.content+'\n\n\n\n\n')
     # for page in result.content:
         # with open("/mnt/c/Users/김석원/Desktop/python_script/pdf_file.txt", "w") as text_file:
             # text_file.write(f"{page_num}:" + f"{page}" + "\n")
@@ -136,8 +136,8 @@ async def receive_file(update, context: CallbackContext):
 
     # Blob Storage에 파일 업로드 실행
     upload_to_blob(os.environ.get('FILE_URL'), blob_service_client, SOURCE_NAME, os.environ.get('FILE_NAME'))
-
-    await update.message.reply_text(f'File {document.file_name} has been downloaded successfully.')
+    result = analyze_read()
+    await update.message.reply_text(f'Result of {document.file_name}: {result}')
 
 
 if __name__ == "__main__":
