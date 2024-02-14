@@ -85,7 +85,7 @@ def analyze_read():
     print('='*60)
     poller = document_analysis_client.begin_analyze_document_from_url("prebuilt-read", formUrl)
     result = poller.result()
-    return result.content[:200]
+    return result.content[5000]
     # print("Document contains contestn:" , result.content)
     # with open("/mnt/c/Users/김석원/Desktop/python_script/pdf_file_test.txt", "w") as text_file:
     #      text_file.write(result.content+'\n\n\n\n\n')
